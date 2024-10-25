@@ -1,4 +1,4 @@
-from todoapp.models.models import Task
+from models.models import Task
 from flask import Blueprint, render_template, request, redirect, url_for
 
 
