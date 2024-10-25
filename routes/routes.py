@@ -1,6 +1,6 @@
+from todoapp.models.models import Task
 from flask import Blueprint, render_template, request, redirect, url_for
 
-from todoapp.models.models import Task  # Asegúrate de que el nombre del módulo es correcto
 
 todo_bp = Blueprint('todo', __name__)
 
