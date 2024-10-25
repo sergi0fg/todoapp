@@ -14,21 +14,24 @@ def test_index(client):
     assert b"To-Do List" in response.data
 
 def test_add_task(client):
-    response = client.post('/add', data={"title": "Test Task"}, follow_redirects=True)
+    response = client.post(
+        '/add',
+        data={"title": "Test Task"},
+        follow_redirects=True
+    )
     assert response.status_code == 200
     assert b"Test Task" in response.data
 
 def test_add_empty_task(client):
-    # Obtener el número de tareas antes de agregar una tarea vacía
-    initial_task_count = len(client.get('/').data.split(b'<li>')) - 1  # Suponiendo que hay una etiqueta <li> por tarea
+    initial_task_count = len(client.get('/').data.split(b'<li>')) - 1
     response = client.post('/add', data={"title": ""}, follow_redirects=True)
-    assert response.status_code == 200  # Debe redirigir de nuevo a la página de índice
-    assert b"To-Do List" in response.data  # Verifica que la lista aún se muestra
-    # Obtener el número de tareas después de intentar agregar una tarea vacía
-    updated_task_count = len(client.get('/').data.split(b'<li>')) - 1  # Nuevamente, contar <li> para obtener tareas
+    
+    assert response.status_code == 200
+    assert b"To-Do List" in response.data
+    assert b"Error: Task title cannot be empty" in response.data
 
-    assert updated_task_count == initial_task_count  # Verificar que el conteo de tareas no ha cambiado
-
+    updated_task_count = len(client.get('/').data.split(b'<li>')) - 1
+    assert updated_task_count == initial_task_count
 
 def test_complete_task(client):
     client.post('/add', data={"title": "Complete Me"}, follow_redirects=True)
