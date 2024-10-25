@@ -1,0 +1,22 @@
+name: CD # nombre de la accion en github
+
+on: # especifica cuando ejecutar el trabajo
+  push: # ejecuta el trabajo cuando hay un push en la rama main
+    branches:
+      - main  # Despliega cada vez que hay un push a la rama principal
+
+jobs: # contiene todos los trabajos que se ejecutarán.
+  build-and-deploy: # es el nombre de este trabajo específico
+    runs-on: ubuntu-latest  # Define que el trabajo se ejecutará en un contenedor de Ubuntu. 
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2  # Descarga mi código fuente
+
+      - name: Build Docker image
+        run: |
+          docker build -t my-todo-app .  # Construye una imagen de Docker para tu aplicación
+
+      - name: Run Docker container
+        run: |
+          docker run -d -p 5000:5000 my-todo-app  # Ejecuta la aplicación en un contenedor de Docker

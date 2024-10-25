@@ -1,0 +1,36 @@
+name: CI # Accion en github
+
+on: #especifica cuando ejecutar el trabajo
+  push: # ejecuta el trabajo cuando hay un push en la rama main
+    branches:
+      - main  #  rama principal
+  pull_request:
+    branches:
+      - main
+
+jobs: # contiene todos los trabajos que se ejecutarán.
+  build: # nombre de este trabajo específico.
+    runs-on: ubuntu-latest  # Especifica el entorno donde se ejecutará el trabajo
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2  # Esta acción descarga mi código fuente
+
+      - name: Set up Python
+        uses: actions/setup-python@v2  # Esta acción configura Python
+        with:
+          python-version: '3.12.3'  # Mi version python
+
+      - name: Install dependencies # Ejecuta comandos para actualizar pip y luego instala las dependencias del proyecto.
+        run: |
+          python -m pip install --upgrade pip  # Actualiza pip a la última versión
+          pip install -r requirements.txt  # Instala las dependencias del archivo requirements.txt
+
+      - name: Install latest pytest and flake8
+        run: |
+          pip install --upgrade pytest flake8  # Instala o actualiza pytest y flake8
+
+      - name: Run flake8 and pytest
+        run: |
+          flake8 --exclude=venv* --statistics  # Ejecuta flake8 para comprobar la calidad del código
+          pytest -v  # Ejecuta las pruebas con pytest y muestra el resultado en detalle
